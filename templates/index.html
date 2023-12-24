@@ -75,7 +75,7 @@
           <nav class="grid items-start px-4 text-sm font-medium">
             <a
               class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-              href="#"
+              href="/api"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -143,32 +143,6 @@
           </svg>
           <span class="sr-only">Home</span>
         </a>
-        <div class="w-full flex-1">
-          <form>
-            <div class="relative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.3-4.3"></path>
-              </svg>
-              <input
-                class="flex h-10 rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full bg-white shadow-none appearance-none pl-8 md:w-2/3 lg:w-1/3 dark:bg-gray-950"
-                placeholder="Search expenses..."
-                type="search"
-              />
-            </div>
-          </form>
-        </div>
         <button
           class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
           type="button"
@@ -189,12 +163,32 @@
         </button>
       </header>
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-        <div class="flex items-center">
-          <h1 class="font-semibold text-lg md:text-2xl">Expenses</h1>
-          <button class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 ml-auto">
-            Add Expense
-        </button>
-      </div>
+        <!--TODO: Add Data Visualization-->
+        <div class="flex gap-4 items-center">
+          <img src="/chart" id="expenseChart" width="400" height="200">
+          <!--TODO: Add AI Financer/Commenter-->
+        </div>
+        <div class="flex gap-4 items-center">
+            <h1 class="font-semibold text-lg md:text-2xl">Expenses</h1>
+            <!-- Your existing form content -->
+            
+            <!-- Export buttons -->
+            <button onclick="exportExpenses('csv')" class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-gray-300 border-2 h-9 rounded-md px-3 w-full mt-4">
+              Export as CSV
+            </button>
+            <button onclick="exportExpenses('xlsx')" class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-gray-300 border-2 h-9 rounded-md px-3 w-full mt-4">
+              Export as Excel
+            </button>            
+          </div>
+        <script>
+          function exportExpenses(format) {
+              // Construct the URL for the export endpoint
+              const url = `/export/${format}`;
+      
+              // Open a new window and navigate to the export endpoint
+              window.open(url, '_blank');
+          }
+      </script>
         <div class="border shadow-sm rounded-lg">
           <div class="relative w-full overflow-auto">
             <table class="w-full caption-bottom text-sm">
@@ -209,15 +203,20 @@
                   <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
                     Amount
                   </th>
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                    Category
+                  </th>
                 </tr>
               </thead>
               <tbody class="[&amp;_tr:last-child]:border-0">
                 {% for expense in expenses %}
-                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 timestamp">{{ expense.timestamp }}</td>
-                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{{ expense.note }}</td>
-                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Rs. {{ expense.amount }}</td>
-                    </tr>
+                <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted expense-row">
+                  <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 timestamp">{{ expense.timestamp }}</td>
+                  <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium note">{{ expense.note }}</td>
+                  <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 amount">Rs. {{ expense.amount }}</td>
+                  <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 category">{{ expense.category }}</td>
+                </tr>
+                
                 {% endfor %}
               </tbody>
               <script>            
@@ -249,13 +248,20 @@
                 type="text"
                 name="note"
               />
+              <select name="category" class="w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <option value="food">Food</option>
+                <option value="utilities">Utilities</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="misc">Misc</option>
+                <option value="misc">Travel</option>
+              </select>
               <input
                 class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
                 placeholder="Amount"
                 type="number"
                 name="amount"
               />
-              <button class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 w-full">
+              <button class="hover:bg-gray-300 border-2 inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 w-full">
                 Add Expense
               </button>
             </form>

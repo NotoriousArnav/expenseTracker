@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #333;
+}
+
+h1 {
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #007BFF;
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+ul, ol {
+    margin-bottom: 20px;
+}
+
+code {
+    background-color: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+pre code {
+    display: block;
+    white-space: pre-wrap;
+}
+
+pre {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+pre code.lang-json {
+    color: #c7254e;
+}
+
+pre code.lang-bash {
+    color: #007BFF;
+}
+
+strong {
+    font-weight: bold;
+    color: #007BFF;
+}
+
+.em {
+    font-style: italic;
+}
+
+.author {
+    font-size: 0.8em;
+    color: #6c757d;
+}
+
+.conclusion {
+    margin-top: 20px;
+    border-top: 2px solid #333;
+    padding-top: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <h1 id="expense-tracker-api-documentation">Expense Tracker API Documentation</h1>
+<h2 id="overview">Overview</h2>
+<p>Expense Tracker is a simple Flask-based web application that allows users to track and manage their expenses. This API documentation provides information on the available endpoints and their functionalities.</p>
+<h3 id="base-url">Base URL</h3>
+<p>The base URL for the API is <code>http://localhost:5000/</code> when running the application locally.</p>
+<h2 id="endpoints">Endpoints</h2>
+<h3 id="1-get-all-expenses">1. Get All Expenses</h3>
+<h4 id="endpoint">Endpoint</h4>
+<ul>
+<li><strong>URL</strong>: <code>/expenses</code></li>
+<li><strong>Method</strong>: <code>GET</code></li>
+<li><strong>Description</strong>: Get a list of all expenses.</li>
+</ul>
+<h4 id="request">Request</h4>
+<ul>
+<li><strong>Parameters</strong>: None</li>
+</ul>
+<h4 id="response">Response</h4>
+<ul>
+<li><strong>Status Code</strong>: 200 OK</li>
+<li><strong>Content-Type</strong>: JSON</li>
+<li><strong>Body Example</strong>:</li>
+</ul>
+<pre><code class="lang-json">[
+  {
+    <span class="hljs-attr">"currency"</span>: <span class="hljs-string">"INR"</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-string">"e8b5e9bd-546d-4b61-8fe5-5bd416da7e21"</span>,
+    <span class="hljs-attr">"note"</span>: <span class="hljs-string">"Dinner"</span>,
+    <span class="hljs-attr">"amount"</span>: <span class="hljs-number">30.0</span>,
+    <span class="hljs-attr">"timestamp"</span>: <span class="hljs-number">1677834482</span>
+  },
+  {
+    <span class="hljs-attr">"currency"</span>: <span class="hljs-string">"INR"</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-string">"c0f4657f-2a46-46b5-b163-4ac5e372ef6f"</span>,
+    <span class="hljs-attr">"note"</span>: <span class="hljs-string">"Groceries"</span>,
+    <span class="hljs-attr">"amount"</span>: <span class="hljs-number">50.0</span>,
+    <span class="hljs-attr">"timestamp"</span>: <span class="hljs-number">1677834571</span>
+  }
+  // ... other expenses
+]
+</code></pre>
+<h3 id="2-get-expense-details">2. Get Expense Details</h3>
+<h4 id="endpoint">Endpoint</h4>
+<ul>
+<li><strong>URL</strong>: <code>/expenses/&lt;expense_id&gt;</code></li>
+<li><strong>Method</strong>: <code>GET</code></li>
+<li><strong>Description</strong>: Get details of a specific expense.</li>
+</ul>
+<h4 id="request">Request</h4>
+<ul>
+<li><strong>Parameters</strong>:<ul>
+<li><code>expense_id</code> (path parameter): ID of the expense.</li>
+</ul>
+</li>
+</ul>
+<h4 id="response">Response</h4>
+<ul>
+<li><p><strong>Status Code</strong>:</p>
+<ul>
+<li>200 OK: Successful request.</li>
+<li>404 Not Found: Expense with the specified ID not found.</li>
+</ul>
+</li>
+<li><p><strong>Content-Type</strong>: JSON</p>
+</li>
+<li><strong>Body Example</strong>:</li>
+</ul>
+<pre><code class="lang-json">{
+  <span class="hljs-attr">"currency"</span>: <span class="hljs-string">"INR"</span>,
+  <span class="hljs-attr">"id"</span>: <span class="hljs-string">"e8b5e9bd-546d-4b61-8fe5-5bd416da7e21"</span>,
+  <span class="hljs-attr">"note"</span>: <span class="hljs-string">"Dinner"</span>,
+  <span class="hljs-attr">"amount"</span>: <span class="hljs-number">30.0</span>,
+  <span class="hljs-attr">"timestamp"</span>: <span class="hljs-number">1677834482</span>
+}
+</code></pre>
+<h3 id="3-add-expense">3. Add Expense</h3>
+<h4 id="endpoint">Endpoint</h4>
+<ul>
+<li><strong>URL</strong>: <code>/expenses</code></li>
+<li><strong>Method</strong>: <code>POST</code></li>
+<li><strong>Description</strong>: Add a new expense.</li>
+</ul>
+<h4 id="request">Request</h4>
+<ul>
+<li><strong>Parameters</strong>:<ul>
+<li><code>note</code> (form parameter): Note/description of the expense.</li>
+<li><code>amount</code> (form parameter): Amount spent.</li>
+<li><code>date</code> (form parameter): Date and time of the expense in the format <code>YYYY-MM-DDTHH:mm</code>.</li>
+</ul>
+</li>
+</ul>
+<h4 id="response">Response</h4>
+<ul>
+<li><strong>Status Code</strong>:<ul>
+<li>302 Found: Successful creation, redirects to the home page.</li>
+<li>400 Bad Request: Invalid request parameters.</li>
+</ul>
+</li>
+</ul>
+<h3 id="error-handling">Error Handling</h3>
+<p>In case of an error, the API will return a JSON response with an <code>&quot;error&quot;</code> field and an appropriate status code.</p>
+<ul>
+<li><strong>Status Code</strong>: 404 Not Found</li>
+<li><strong>Content-Type</strong>: JSON</li>
+<li><strong>Body Example</strong>:</li>
+</ul>
+<pre><code class="lang-json">{
+  <span class="hljs-attr">"error"</span>: <span class="hljs-string">"Expense not found"</span>
+}
+</code></pre>
+<h2 id="example-usage">Example Usage</h2>
+<h3 id="curl-example">Curl Example</h3>
+<ol>
+<li>Get all expenses:</li>
+</ol>
+<pre><code class="lang-bash">curl <span class="hljs-string">http:</span><span class="hljs-comment">//localhost:5000/expenses</span>
+</code></pre>
+<ol>
+<li>Get expense details:</li>
+</ol>
+<pre><code class="lang-bash">curl http://localhost:<span class="hljs-number">5000</span>/expenses/e8b5e9bd-546d-<span class="hljs-number">4b61</span>-8fe5-5bd416da7e21
+</code></pre>
+<ol>
+<li>Add a new expense:</li>
+</ol>
+<pre><code class="lang-bash">curl -X POST -d <span class="hljs-string">"note=Dinner&amp;amount=30&amp;date=2023-01-15T19:30"</span> <span class="hljs-string">http:</span><span class="hljs-comment">//localhost:5000/expenses</span>
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>The Expense Tracker API provides simple and straightforward endpoints for managing expenses. Feel free to use the provided endpoints according to your requirements. If you encounter any issues or have further questions, please refer to the API documentation or contact the developer.</p>
+<p><em>Author: Arnav Ghosh</em></p>
+</body>
+</html>

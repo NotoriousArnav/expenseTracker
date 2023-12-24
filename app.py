@@ -4,13 +4,17 @@ from flask import (
         request,
         redirect,
         url_for,
-        jsonify
+        jsonify,
+        send_file
     )
 from models import (
         db,
         Expenses
     )
-import uuid, time
+import uuid, time, io
+import matplotlib.pyplot as plt
+import base64
+import pandas as pd
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
@@ -39,17 +43,47 @@ def index():
         expenses=expenses
     )
 
+@app.route('/chart', methods=['GET'])
+def generate_chart():
+    # Fetch all expenses from the database
+    expenses = Expenses.query.all()
+
+    # Create a Pandas DataFrame from the expense data
+    import pandas as pd
+    df = pd.DataFrame([(expense.category, expense.amount) for expense in expenses], columns=['category', 'amount'])
+
+    # Create a simple bar chart using Matplotlib
+    plt.figure(figsize=(8, 5))
+    plt.bar(df['category'], df['amount'], color='skyblue')
+    plt.xlabel('Expense Category')
+    plt.ylabel('Amount (in Currency)')
+    plt.title('Expense Distribution')
+
+    # Save the chart to a BytesIO object
+    img_stream = io.BytesIO()
+    plt.savefig(img_stream, format='png')
+    img_stream.seek(0)
+    plt.close()
+
+    # Convert the image to base64 for embedding in HTML
+    return send_file(img_stream, mimetype="image/png")
+
+@app.route('/api')
+def api_docs():
+    return render_template('api_docs.html')
+
 @app.route('/expenses', methods=['GET', 'POST'])
 def view_expenses():
     if request.method == 'POST':
         note = request.form['note']
         amount = float(request.form['amount'])
         timestamp = convert_to_unix_timestamp(request.form['date'])
+        category = request.form['category']
         print(timestamp)
         print(request.form)
         id=str(uuid.uuid4())
         # Create a new expense
-        new_expense = Expenses(id=id, note=note, amount=amount, timestamp=timestamp)
+        new_expense = Expenses(id=id, note=note, amount=amount, timestamp=timestamp, category=category)
 
         # Add the expense to the database
         db.session.add(new_expense)
@@ -90,6 +124,32 @@ def view_expense(expense_id):
 
     return jsonify(expense_dict)
     #return render_template("expense_details.html", expense=expense)
+
+@app.route('/export/<format>')
+def export_expenses(format):
+    expenses = Expenses.query.all()
+    df = pd.DataFrame([
+        {
+            "Timestamp": expense.timestamp,
+            "Note": expense.note,
+            "Amount": expense.amount,
+            "Category": expense.category
+        }
+        for expense in expenses
+    ])
+
+    if format == 'csv':
+        filename = 'expenses.csv'
+        df.to_csv(filename, index=False)
+        mimetype = 'text/csv'
+    elif format == 'xlsx':
+        filename = 'expenses.xlsx'
+        df.to_excel(filename, index=False)
+        mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    else:
+        return jsonify({"error": "Invalid format"}), 400
+
+    return send_file(filename, mimetype=mimetype, as_attachment=True)
 
 
 if __name__ == "__main__":

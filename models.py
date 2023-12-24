@@ -13,6 +13,10 @@ class Expenses(db.Model):
         db.String,
         nullable=False
     )
+    category = db.Column(
+        db.String,
+        nullable=False
+    )
     amount = db.Column(
         db.Float,
         nullable=False
