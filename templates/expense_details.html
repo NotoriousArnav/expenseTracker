@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block head %}
+    <title>Manage your Expenses</title>
+{% endblock %}
+{% block body %}
+<h1>Expense Details</h1>
+<p><strong>Note:</strong> {{ expense.note }}</p>
+<p><strong>Amount:</strong> Rs.{{ expense.amount }}</p>
+<p><strong>Unix Timestamp:</strong> {{ expense.timestamp }}</p>
+{% endblock %}

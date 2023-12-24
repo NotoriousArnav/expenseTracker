@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block head %}
+    <title>Manage your Expenses</title>
+{% endblock %}
+{% block body %}
+<h1>Expenses List</h1>
+<table>
+    <th>
+        <td>Note</td>
+        <td>Amount</td>
+        <td>timestamp</td>
+    </th>
+    {% for expense in expenses %}
+    <tr>
+        <td>
+            <a href="{{ url_for('view_expense', expense_id=expense.id) }}">
+                {{ expense.note }}
+            </a>
+        </td>
+        <td>
+            Rs.{{ expense.amount }}
+        </td>
+        <td>
+            {{ expense.timestamp }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

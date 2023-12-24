@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% block head %}
+    <title>Manage your Expenses</title>
+    <script>
+        function convertUnixTimestampToDateTime(unixTimestamp) {
+            // Multiply by 1000 to convert seconds to milliseconds
+            const dateObject = new Date(unixTimestamp * 1000);
+        
+            // Get individual date and time components
+            const year = dateObject.getFullYear();
+            const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
+            const day = dateObject.getDate().toString().padStart(2, '0');
+            const hours = dateObject.getHours().toString().padStart(2, '0');
+            const minutes = dateObject.getMinutes().toString().padStart(2, '0');
+            const seconds = dateObject.getSeconds().toString().padStart(2, '0');
+        
+            // Create a human-readable date and time string
+            const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        
+            return formattedDateTime;
+        }
+    </script>
+{% endblock %}
+{% block body %}
+<!--
+// v0 by Vercel.
+// https://v0.dev/t/kK1w0MrLUxy
+-->
+
+<div class="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
+    <div class="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
+      <div class="flex h-full max-h-screen flex-col gap-2">
+        <div class="flex h-[60px] items-center border-b px-6">
+          <a class="flex items-center gap-2 font-semibold" href="#">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-6 w-6"
+            >
+              <circle cx="12" cy="12" r="8"></circle>
+              <line x1="3" x2="6" y1="3" y2="6"></line>
+              <line x1="21" x2="18" y1="3" y2="6"></line>
+              <line x1="3" x2="6" y1="21" y2="18"></line>
+              <line x1="21" x2="18" y1="21" y2="18"></line>
+            </svg>
+            <span class="">Expense Tracker</span>
+          </a>
+          <!-- <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground ml-auto h-8 w-8">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+            </svg>
+            <span class="sr-only">Toggle notifications</span>
+          </button> -->
+        </div>
+        <div class="flex-1 overflow-auto py-2">
+          <nav class="grid items-start px-4 text-sm font-medium">
+            <a
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+              href="#"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              API Docs
+            </a>
+            <a
+              class="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
+              href="#"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1Z"></path>
+                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                <path d="M12 17V7"></path>
+              </svg>
+              Expenses
+            </a>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col">
+      <header class="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
+        <a class="lg:hidden" href="#">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-6 w-6"
+          >
+            <circle cx="12" cy="12" r="8"></circle>
+            <line x1="3" x2="6" y1="3" y2="6"></line>
+            <line x1="21" x2="18" y1="3" y2="6"></line>
+            <line x1="3" x2="6" y1="21" y2="18"></line>
+            <line x1="21" x2="18" y1="21" y2="18"></line>
+          </svg>
+          <span class="sr-only">Home</span>
+        </a>
+        <div class="w-full flex-1">
+          <form>
+            <div class="relative">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </svg>
+              <input
+                class="flex h-10 rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full bg-white shadow-none appearance-none pl-8 md:w-2/3 lg:w-1/3 dark:bg-gray-950"
+                placeholder="Search expenses..."
+                type="search"
+              />
+            </div>
+          </form>
+        </div>
+        <button
+          class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
+          type="button"
+          id="radix-:ra:"
+          aria-haspopup="menu"
+          aria-expanded="false"
+          data-state="closed"
+        >
+          <img
+            src="https://dummyimage.com/1024x1024/0a599a/000000.jpg&text=User+Avatar+Goes+here"
+            width="32"
+            height="32"
+            class="rounded-full"
+            alt="Avatar"
+            style="aspect-ratio: 32 / 32; object-fit: cover;"
+          />
+          <span class="sr-only">Toggle user menu</span>
+        </button>
+      </header>
+      <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+        <div class="flex items-center">
+          <h1 class="font-semibold text-lg md:text-2xl">Expenses</h1>
+          <button class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 ml-auto">
+            Add Expense
+        </button>
+      </div>
+        <div class="border shadow-sm rounded-lg">
+          <div class="relative w-full overflow-auto">
+            <table class="w-full caption-bottom text-sm">
+              <thead class="[&amp;_tr]:border-b">
+                <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[80px]">
+                    Timestamp
+                  </th>
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 max-w-[150px]">
+                    Description
+                  </th>
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                    Amount
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="[&amp;_tr:last-child]:border-0">
+                {% for expense in expenses %}
+                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 timestamp">{{ expense.timestamp }}</td>
+                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{{ expense.note }}</td>
+                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Rs. {{ expense.amount }}</td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+              <script>            
+                // Fetch all elements with the class 'timestamp' and update their content
+                document.querySelectorAll('.timestamp').forEach(function (element) {
+                    const unixTimestamp = parseInt(element.innerText);
+                    const formattedDateTime = convertUnixTimestampToDateTime(unixTimestamp);
+                    element.innerText = formattedDateTime;
+                });
+            </script>
+            </table>
+          </div>
+        </div>
+        <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+          <div class="flex flex-col space-y-1.5 p-6 pb-4">
+            <h3 class="text-2xl font-semibold leading-none tracking-tight">Add new expense</h3>
+          </div>
+          <div class="p-6">
+            <form class="space-y-4" method="post" action="/expenses">
+              <input
+                class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                placeholder="Date"
+                type="datetime-local"
+                name="date"
+              />
+              <input
+                class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                placeholder="Description"
+                type="text"
+                name="note"
+              />
+              <input
+                class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                placeholder="Amount"
+                type="number"
+                name="amount"
+              />
+              <button class="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 w-full">
+                Add Expense
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+{% endblock %}
