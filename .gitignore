@@ -1,4 +1,4 @@
-__pycache__
-instance
+__pycache__/*
+instance/*
 expenses.csv
 expenses.xlsx
