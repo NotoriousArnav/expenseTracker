@@ -163,7 +163,6 @@
         </button>
       </header>
       <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-        <!--TODO: Add Data Visualization-->
         <div class="flex gap-4 items-center">
           <img src="/chart" id="expenseChart" width="400" height="200">
           <!--TODO: Add AI Financer/Commenter-->
@@ -209,6 +208,7 @@
                 </tr>
               </thead>
               <tbody class="[&amp;_tr:last-child]:border-0">
+                <!--TODO: Allow Deletion/Editing of Expenses-->
                 {% for expense in expenses %}
                 <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted expense-row">
                   <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 timestamp">{{ expense.timestamp }}</td>

@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+# TODO: Add User Table here
+
 class Expenses(db.Model):
     id = db.Column(
         db.String,

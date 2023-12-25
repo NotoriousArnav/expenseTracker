@@ -11,15 +11,15 @@ from models import (
         db,
         Expenses
     )
-import uuid, time, io
+from datetime import datetime, timezone
 import matplotlib.pyplot as plt
-import base64
+import uuid, time, io
 import pandas as pd
+import base64
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
 
-from datetime import datetime, timezone
 
 def convert_to_unix_timestamp(date_string):
     try:
@@ -34,6 +34,10 @@ def convert_to_unix_timestamp(date_string):
     except ValueError:
         # Handle invalid date string
         return None
+
+
+# TODO: Add Multi User Support
+# TODO: Add dotenv support
 
 @app.route('/')
 def index():
