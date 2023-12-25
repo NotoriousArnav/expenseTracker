@@ -1,4 +1,5 @@
 __pycache__/*
 instance/*
+database.sqlite3
 expenses.csv
 expenses.xlsx
