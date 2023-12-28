@@ -78,10 +78,6 @@ Contributions are welcome! Feel free to open issues or submit pull requests to h
 
 This project is licensed under the [MIT License](LICENSE).
 
-## Acknowledgments
-
-- Special thanks to Arnav Ghosh for the guidance and inspiration.
-
 ---
 
 *Author: Your Name*
