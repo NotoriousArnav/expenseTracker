@@ -11,6 +11,7 @@ from models import (
         db,
         Expenses
     )
+
 from datetime import datetime, timezone
 import matplotlib.pyplot as plt
 import uuid, time, io
@@ -24,10 +25,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
 def convert_to_unix_timestamp(date_string):
     try:
         # Convert string to datetime object
-        date_object = datetime.strptime(date_string, "%Y-%m-%dT%H:%M")
+        date_object = datetime.strptime(
+            date_string,
+            "%Y-%m-%dT%H:%M"
+        )
 
         # Convert datetime object to Unix timestamp
-        unix_timestamp = float(date_object.replace(tzinfo=timezone.utc).timestamp())
+        unix_timestamp = float(
+            date_object.replace(
+                tzinfo=timezone.utc
+            ).timestamp()
+        )
 
         return unix_timestamp
 
@@ -87,7 +95,13 @@ def view_expenses():
         print(request.form)
         id=str(uuid.uuid4())
         # Create a new expense
-        new_expense = Expenses(id=id, note=note, amount=amount, timestamp=timestamp, category=category)
+        new_expense = Expenses(
+                id=id,
+                note=note,
+                amount=amount,
+                timestamp=timestamp,
+                category=category
+            )
 
         # Add the expense to the database
         db.session.add(new_expense)
